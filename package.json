@@ -24,10 +24,11 @@
   "homepage": "https://github.com/jroulette76/Back-End-Module-2-Assignmnet#readme",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^26.6.3",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "express": "^5.2.1",
