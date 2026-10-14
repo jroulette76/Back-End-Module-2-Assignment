@@ -12,3 +12,27 @@ interface HealthCheckResponse {
     version: string;
 }
 
+// Logging middleware
+app.use(morgan("combined"));
+
+// JSON body parser
+app.use(express.json());
+
+// Root route
+app.get("/", (req, res) => {
+    res.send("Hello, world");
+});
+
+// Health check endpoint
+app.get("/api/v1/health", (req, res) => {
+    const healthData: HealthCheckResponse = {
+        status: "OK",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        version: "1.0.0",
+    };
+
+    res.json(healthData);
+});
+
+export default app;
