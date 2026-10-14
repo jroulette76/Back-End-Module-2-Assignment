@@ -61,3 +61,16 @@ export const updateTicket = async (
 
   return structuredClone(tickets[index]);
 };
+
+/**
+ * Delete a ticket by ID
+ */
+export const deleteTicket = async (id: number): Promise<void> => {
+  const index = tickets.findIndex((t) => t.id === id);
+
+  if (index === -1) {
+    throw new Error(`Ticket with ID ${id} not found`);
+  }
+
+  tickets.splice(index, 1);
+};
