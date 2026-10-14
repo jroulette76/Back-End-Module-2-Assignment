@@ -74,3 +74,68 @@ export const deleteTicket = async (id: number): Promise<void> => {
 
   tickets.splice(index, 1);
 };
+
+/**
+ * Calculate ticket urgency
+ */
+export const calculateUrgency = async (ticket: Ticket): Promise<{
+  ticketAge: number;
+  urgencyScore: number;
+  urgencyLevel: string;
+}> => {
+  const ticketAge = calculateTicketAge(ticket.createdAt);
+
+  // Resolved tickets always have zero urgency
+  if (ticket.status === "resolved") {
+    return {
+      ticketAge,
+      urgencyScore: 0,
+      urgencyLevel: "Minimal. Ticket resolved.",
+    };
+  }
+
+  const baseScore = getBaseScore(ticket.priority);
+  const urgencyScore = baseScore + ticketAge * 5;
+  const urgencyLevel = getUrgencyLevel(urgencyScore);
+
+  return {
+    ticketAge,
+    urgencyScore,
+    urgencyLevel,
+  };
+};
+
+/**
+ * Calculate ticket age in whole days
+ */
+function calculateTicketAge(createdAt: Date): number {
+  const now = new Date();
+  const diffMs = now.getTime() - createdAt.getTime();
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Base scores by priority
+ */
+function getBaseScore(priority: Ticket["priority"]): number {
+  switch (priority) {
+    case "critical":
+      return 50;
+    case "high":
+      return 30;
+    case "medium":
+      return 20;
+    case "low":
+      return 10;
+  }
+}
+
+/**
+ * Determine urgency level based on score
+ */
+function getUrgencyLevel(score: number): string {
+  if (score < 30) return "Low urgency. Address when capacity allows.";
+  if (score < 60) return "Moderate. Schedule for attention.";
+  if (score < 80) return "High urgency. Prioritize resolution.";
+  return "Critical. Immediate attention required.";
+}
