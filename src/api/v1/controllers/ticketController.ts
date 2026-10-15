@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as ticketService from "../services/ticketService";
-import { HTTP_STATUS } from "../../../constants/httpStatus";
+import { HTTP_STATUS } from "../../../constants/httpConstants";
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
