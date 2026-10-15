@@ -39,3 +39,37 @@ export const getTicketById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const createTicket = async (req: Request, res: Response) => {
+  try {
+    const { title, description, priority } = req.body;
+
+    if (!title || !description || !priority) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Missing required fields: title, description, priority",
+      });
+    }
+
+    const allowedPriorities = ["critical", "high", "medium", "low"];
+    if (!allowedPriorities.includes(priority)) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Invalid priority value",
+      });
+    }
+
+    const newTicket = await ticketService.createTicket({
+      title,
+      description,
+      priority,
+    });
+
+    return res.status(HTTP_STATUS.CREATED).json({
+      message: "Ticket created",
+      data: newTicket,
+    });
+  } catch (error: any) {
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: error.message,
+    });
+  }
+};
