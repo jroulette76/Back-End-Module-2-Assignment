@@ -1,10 +1,11 @@
 import type { Request, Response } from "express";
 import * as ticketService from "../services/ticketService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
+import type { Ticket } from "../models/ticketModel"; 
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
-    const tickets = await ticketService.getAllTickets();
+    const tickets: Ticket[] = await ticketService.getAllTickets();
 
     return res.status(HTTP_STATUS.OK).json({
       message: "Tickets retrieved",
@@ -27,7 +28,7 @@ export const getTicketById = async (req: Request, res: Response) => {
       });
     }
 
-    const ticket = await ticketService.getTicketById(id);
+    const ticket: Ticket = await ticketService.getTicketById(id);
 
     return res.status(HTTP_STATUS.OK).json({
       message: "Ticket retrieved",
