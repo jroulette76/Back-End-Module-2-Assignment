@@ -73,3 +73,43 @@ export const createTicket = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateTicket = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Invalid ticket ID",
+      });
+    }
+
+    const updates = req.body;
+
+    const allowedPriorities = ["critical", "high", "medium", "low"];
+    const allowedStatuses = ["open", "in-progress", "resolved"];
+
+    if (updates.priority && !allowedPriorities.includes(updates.priority)) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Invalid priority value",
+      });
+    }
+
+    if (updates.status && !allowedStatuses.includes(updates.status)) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Invalid status value",
+      });
+    }
+
+    const updatedTicket = await ticketService.updateTicket(id, updates);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: "Ticket updated",
+      data: updatedTicket,
+    });
+  } catch (error: any) {
+    return res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: error.message,
+    });
+  }
+};
