@@ -113,3 +113,25 @@ export const updateTicket = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteTicket = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Invalid ticket ID",
+      });
+    }
+
+    await ticketService.deleteTicket(id);
+
+    return res.status(HTTP_STATUS.OK).json({
+      message: "Ticket deleted",
+    });
+  } catch (error: any) {
+    return res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: error.message,
+    });
+  }
+};
