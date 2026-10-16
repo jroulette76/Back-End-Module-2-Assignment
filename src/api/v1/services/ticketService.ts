@@ -14,7 +14,7 @@ export const getAllTickets = async (): Promise<Ticket[]> => {
 export const getTicketById = async (id: number): Promise<Ticket> => {
     const ticket = tickets.find((t) => t.id === id);
     if (!ticket) {
-        throw new Error(`Ticket with ID ${id} not found`);
+        throw new Error(`Ticket not found`);
     }
     
     return structuredClone(ticket);
@@ -51,7 +51,7 @@ export const updateTicket = async (
   const index = tickets.findIndex((t) => t.id === id);
 
   if (index === -1) {
-    throw new Error(`Ticket with ID ${id} not found`);
+    throw new Error(`Ticket not found`);
   }
 
   tickets[index] = {
@@ -69,7 +69,7 @@ export const deleteTicket = async (id: number): Promise<void> => {
   const index = tickets.findIndex((t) => t.id === id);
 
   if (index === -1) {
-    throw new Error(`Ticket with ID ${id} not found`);
+    throw new Error(`Ticket not found`);
   }
 
   tickets.splice(index, 1);
@@ -108,16 +108,16 @@ export const calculateUrgency = async (ticket: Ticket): Promise<{
 /**
  * Calculate ticket age in whole days
  */
-function calculateTicketAge(createdAt: Date): number {
+export const calculateTicketAge = (createdAt: Date): number => {
   const now = new Date();
   const diffMs = now.getTime() - createdAt.getTime();
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
-}
+};
 
 /**
  * Base scores by priority
  */
-function getBaseScore(priority: Ticket["priority"]): number {
+export const getBaseScore = (priority: Ticket["priority"]): number => {
   switch (priority) {
     case "critical":
       return 50;
@@ -128,14 +128,14 @@ function getBaseScore(priority: Ticket["priority"]): number {
     case "low":
       return 10;
   }
-}
+};
 
 /**
  * Determine urgency level based on score
  */
-function getUrgencyLevel(score: number): string {
+export const getUrgencyLevel = (score: number): string => {
   if (score < 30) return "Low urgency. Address when capacity allows.";
-  if (score < 60) return "Moderate. Schedule for attention.";
+  if (score < 55) return "Moderate. Schedule for attention.";
   if (score < 80) return "High urgency. Prioritize resolution.";
   return "Critical. Immediate attention required.";
-}
+};
