@@ -9,6 +9,7 @@ export const getAllTickets = async (req: Request, res: Response) => {
 
     return res.status(HTTP_STATUS.OK).json({
       message: "Tickets retrieved",
+      count: tickets.length,
       data: tickets,
     });
   } catch (error: any) {
