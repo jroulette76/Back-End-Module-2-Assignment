@@ -66,4 +66,40 @@ it("should create a new ticket", async () => {
   expect(res.body.data).toHaveProperty("priority", newTicket.priority);
 });
 
+it("should update an existing ticket", async () => {
+  const updatedTicket = {
+    title: "Updated Issue",
+    description: "Updated description",
+    priority: "low"
+  };
+
+  const res = await request(app)
+    .put("/api/v1/tickets/1")
+    .send(updatedTicket)
+    .set("Content-Type", "application/json");
+
+  expect(res.status).toBe(200);
+  expect(res.body).toHaveProperty("message", "Ticket updated");
+  expect(res.body).toHaveProperty("data");
+
+  // Validate updated fields
+  expect(res.body.data).toHaveProperty("id", 1);
+  expect(res.body.data).toHaveProperty("title", updatedTicket.title);
+  expect(res.body.data).toHaveProperty("description", updatedTicket.description);
+  expect(res.body.data).toHaveProperty("priority", updatedTicket.priority);
+});
+
+it("should return 400 for invalid ID on update", async () => {
+  const res = await request(app)
+    .put("/api/v1/tickets/abc")
+    .send({
+      title: "Bad Update",
+      description: "Invalid ID test",
+      priority: "high"
+    });
+
+  expect(res.status).toBe(400);
+  expect(res.body).toHaveProperty("message", "Invalid ticket ID");
+});
+
 })
