@@ -102,6 +102,32 @@ it("should return 400 for invalid ID on update", async () => {
   expect(res.body).toHaveProperty("message", "Invalid ticket ID");
 });
 
+it("should return urgency details for a ticket", async () => {
+  const res = await request(app).get("/api/v1/tickets/1/urgency");
+
+  expect(res.status).toBe(200);
+  expect(res.body).toHaveProperty("message", "Ticket urgency calculated");
+  expect(res.body).toHaveProperty("data");
+
+  // Validate urgency structure
+  expect(res.body.data).toHaveProperty("urgencyScore");
+  expect(typeof res.body.data.urgencyScore).toBe("number");
+
+  expect(res.body.data).toHaveProperty("urgencyLevel");
+  expect([
+    "Low. No immediate action required.",
+    "Moderate. Schedule for attention.",
+    "High. Immediate action required."
+  ]).toContain(res.body.data.urgencyLevel);
+});
+
+it("should return 400 for invalid ID on urgency check", async () => {
+  const res = await request(app).get("/api/v1/tickets/abc/urgency");
+
+  expect(res.status).toBe(400);
+  expect(res.body).toHaveProperty("message", "Invalid ticket ID");
+});
+
 it("should delete a ticket by ID", async () => {
   const res = await request(app).delete("/api/v1/tickets/1");
 
