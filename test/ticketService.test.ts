@@ -62,4 +62,23 @@ it("should calculate HIGH urgency correctly", async () => {
   expect(result.urgencyLevel).toBe("High urgency. Prioritize resolution.");
 });
 
+it("should return minimal urgency for resolved tickets", async () => {
+  // Arrange
+  const ticket: Ticket = {
+    id: 4,
+    title: "Test Resolved",
+    description: "Resolved ticket test",
+    priority: "critical",
+    status: "resolved",
+    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+  };
+
+  // Act
+  const result = await calculateUrgency(ticket);
+
+  // Assert
+  expect(result.urgencyScore).toBe(0);
+  expect(result.urgencyLevel).toBe("Minimal. Ticket resolved.");
+});
+
 })
