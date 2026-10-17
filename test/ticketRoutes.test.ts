@@ -43,4 +43,27 @@ it("should return 400 for invalid ID", async () => {
   expect(res.body).toHaveProperty("message", "Invalid ticket ID");
 });
 
+it("should create a new ticket", async () => {
+  const newTicket = {
+    title: "New Issue",
+    description: "Something is not working",
+    priority: "high"
+  };
+
+  const res = await request(app)
+    .post("/api/v1/tickets")
+    .send(newTicket)
+    .set("Content-Type", "application/json");
+
+  expect(res.status).toBe(201);
+  expect(res.body).toHaveProperty("message", "Ticket created");
+  expect(res.body).toHaveProperty("data");
+
+  // Validate structure of created ticket
+  expect(res.body.data).toHaveProperty("id");
+  expect(res.body.data).toHaveProperty("title", newTicket.title);
+  expect(res.body.data).toHaveProperty("description", newTicket.description);
+  expect(res.body.data).toHaveProperty("priority", newTicket.priority);
+});
+
 })
