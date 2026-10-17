@@ -102,4 +102,18 @@ it("should return 400 for invalid ID on update", async () => {
   expect(res.body).toHaveProperty("message", "Invalid ticket ID");
 });
 
+it("should delete a ticket by ID", async () => {
+  const res = await request(app).delete("/api/v1/tickets/1");
+
+  expect(res.status).toBe(200);
+  expect(res.body).toHaveProperty("message", "Ticket deleted");
+});
+
+it("should return 400 for invalid ID on delete", async () => {
+  const res = await request(app).delete("/api/v1/tickets/abc");
+
+  expect(res.status).toBe(400);
+  expect(res.body).toHaveProperty("message", "Invalid ticket ID");
+});
+
 })
