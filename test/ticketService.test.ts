@@ -43,4 +43,23 @@ it("should calculate MODERATE urgency correctly", async () => {
   expect(result.urgencyLevel).toBe("Moderate. Schedule for attention.");
 });
 
+it("should calculate HIGH urgency correctly", async () => {
+  // Arrange
+  const ticket: Ticket = {
+    id: 3,
+    title: "Test High",
+    description: "High urgency test",
+    priority: "high",
+    status: "open",
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
+  };
+
+  // Act
+  const result = await calculateUrgency(ticket);
+
+  // Assert
+  expect(result.urgencyScore).toBe(30 + 5 * 5);
+  expect(result.urgencyLevel).toBe("High urgency. Prioritize resolution.");
+});
+
 })
